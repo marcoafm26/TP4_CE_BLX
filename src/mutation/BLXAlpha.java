@@ -13,28 +13,28 @@ public class BLXAlpha {
         this.standardDeviation = standardDeviation;
         this.invertGens = invertGens;
     }
-    public double[][] getOffSpring(double[] father_1, double[] father_2, double[] lowerBounds, double[] upperBounds){
+    public double[][] getOffSpring(double[] values_1, double[] values_2, double[] lowerBounds, double[] upperBounds){
 
-        double[] child_1 = new double[father_1.length];
-        double[] child_2 = new double[father_1.length];
+        double[] child_1 = new double[values_1.length];
+        double[] child_2 = new double[values_1.length];
 
         Random random = new Random();
 
-        for(int i = 0; i < father_1.length; i++){
+        for(int i = 0; i < values_1.length; i++){
             double c1 = 0;
             double c2 = 0;
 
             if(invertGens){
                 if(random.nextDouble() > 0.5){
-                    c1 = father_1[i] + (random.nextGaussian() * standardDeviation) * Math.abs(father_1[i] - father_2[i]);
-                    c2 = father_2[i] + (random.nextGaussian() * standardDeviation) * Math.abs(father_1[i] - father_2[i]);
+                    c1 = values_1[i] + (random.nextGaussian() * standardDeviation) * Math.abs(values_1[i] - values_2[i]);
+                    c2 = values_2[i] + (random.nextGaussian() * standardDeviation) * Math.abs(values_1[i] - values_2[i]);
                 }else{
-                    c1 = father_2[i] + (random.nextGaussian() * standardDeviation) * Math.abs(father_1[i] - father_2[i]);
-                    c2 = father_1[i] + (random.nextGaussian() * standardDeviation) * Math.abs(father_1[i] - father_2[i]);
+                    c1 = values_2[i] + (random.nextGaussian() * standardDeviation) * Math.abs(values_1[i] - values_2[i]);
+                    c2 = values_1[i] + (random.nextGaussian() * standardDeviation) * Math.abs(values_1[i] - values_2[i]);
                 }
             }else{
-                c1 = father_1[i] + (random.nextGaussian() * standardDeviation) * Math.abs(father_1[i] - father_2[i]);
-                c2 = father_2[i] + (random.nextGaussian() * standardDeviation) * Math.abs(father_1[i] - father_2[i]);
+                c1 = values_1[i] + (random.nextGaussian() * standardDeviation) * Math.abs(values_1[i] - values_2[i]);
+                c2 = values_2[i] + (random.nextGaussian() * standardDeviation) * Math.abs(values_1[i] - values_2[i]);
             }
 
             c1 = repairSolution(c1, lowerBounds[i], upperBounds[i]);

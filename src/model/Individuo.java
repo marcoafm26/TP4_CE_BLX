@@ -1,6 +1,8 @@
 package model;
 
 import mutation.BLXAlpha;
+import mutation.Mutation;
+import mutation.None;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,46 +15,44 @@ public class Individuo implements  Comparable<Individuo> {
     private double[] avaliacao;
     private double Cd;
     private Random random;
-
+    public BLXAlpha blxAlpha;
+    public Mutation mutation;
     public Individuo(int QTD_GENES,int QTD_AVALIACAO){
         this.genes = new double[QTD_GENES];
         this.avaliacao = new double[QTD_AVALIACAO];
         this.random = new Random();
+        this.blxAlpha = new BLXAlpha(0.1);
     }
-
-    public BLXAlpha blxAlpha;
-    public Mutation mutation;
 
     public Individuo(double[] values, int qntAvaliation) {
-        this( values, qntAvaliation, new BLXAlpha(0.1), new MutationNone());
+        this( values, qntAvaliation, new BLXAlpha(0.1), new None());
     }
     public Individuo(double[] values, double[] qntAvaliation) {
-        this( values, qntAvaliation, new BLXAlpha(0.1), new MutationNone());
+        this( values, qntAvaliation, new BLXAlpha(0.1), new None());
     }
     public Individuo(double[]  values, int qntAvaliation, BLXAlpha blxAlpha, Mutation mutation){
-        values = values;
-        avaliation = new double[qntAvaliation];
+        this.genes = values;
+        this.avaliacao = new double[qntAvaliation];
         this.blxAlpha = blxAlpha;
         this.mutation = mutation;
     }
 
     public Individuo(double[]  values, double[] qntAvaliation, BLXAlpha blxAlpha, Mutation mutation){
-        values = values;
-        avaliation = qntAvaliation;
+        this.genes = values;
+        this.avaliacao = qntAvaliation;
         this.blxAlpha = blxAlpha;
         this.mutation = mutation;
     }
     public List<Individuo> recombinar(Individuo p2){
         List<Individuo> filhos = new ArrayList<>(2);
 
-        double[] varsP1 = this.genes;
-        double[] varsP2 = p2.genes;
-
         double[][] filhosMat = blxAlpha.getOffSpring(this.genes, p2.genes, new double[]{-10, -10}, new double[]{10, 10});
-
         Individuo f1 = new Individuo(this.genes, filhosMat[0]);
-        Individuo f2 = new Individuo(this.genes, filhosMat[1]);
+        Individuo f2 = new Individuo(p2.genes, filhosMat[1]); // TODO Alterado o this para p2
 
+        if (f1.genes.length == 0 || f2.genes.length == 0){
+            int i = 0;
+        }
         filhos.add(f1);
         filhos.add(f2);
 
@@ -60,7 +60,7 @@ public class Individuo implements  Comparable<Individuo> {
     }
 
     public void mutar(){
-        this.values = mutation.getMutation(this.values, new double[]{-10, -10}, new double[]{10, 10});
+        this.genes = mutation.getMutation(this.genes, new double[]{-10, -10}, new double[]{10, 10});
     }
 
     public void avaliar(int FUNCTION){

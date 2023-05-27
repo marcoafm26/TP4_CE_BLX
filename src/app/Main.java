@@ -52,15 +52,7 @@ public class Main {
       List<Individuo> newPop = new ArrayList<>(NUM_INDIVIDUOS);
       List<Individuo> intermedPop = new ArrayList<>(individuos);
 
-      for (int i = 0; i < NUM_INDIVIDUOS; i++) {
-        Individuo u = generateUInd(individuos, i);
-
-        Individuo exp = recombinar(individuos.get(i), u);
-        exp.avaliar(FUNCTION);
-
-        intermedPop.add(exp);
-      }
-
+      makeOffspring(intermedPop, individuos);
       List<List<Individuo>> borders = FNDS.execute(intermedPop);
 
       for (List<Individuo> border : borders) {
@@ -86,66 +78,11 @@ public class Main {
       }
 
       INICIAL_GEN++;
-      print(individuos);
+//      print(individuos);
     }
 
     return individuos.get(0);
   }
-  public  Individuo recombinar(Individuo individuo, Individuo u){
-    Individuo son = new Individuo(QTD_GENES, QTD_AVALIACAO);
-    boolean verifyGenes = false;
-    Random random = new Random();
-
-    for (int i = 0; i < individuo.getGenes().length; i++) {
-      double r = random.nextDouble();
-
-      if (r <  Cr) {
-        son.getGenes()[i] = individuo.getGenes()[i];
-      } else {
-        verifyGenes = true;
-        son.getGenes()[i] = u.getGenes()[i];
-      }
-    }
-
-    if (!verifyGenes){
-      int r = random.nextInt(individuo.getGenes().length);
-      son.getGenes()[r] = u.getGenes()[r];
-    }
-    return son;
-  }
-
-
-//  private Individuo generateUInd(List<Individuo> popInd, int i) {
-//    Random random = new Random();
-//    int randomIndex1 = random.nextInt(NUM_INDIVIDUOS - 1);
-//    while(randomIndex1 == i){
-//      randomIndex1 = random.nextInt(NUM_INDIVIDUOS - 1);
-//    }
-//
-//    int randomIndex2 = random.nextInt(NUM_INDIVIDUOS - 1);
-//    while(randomIndex2 == i || randomIndex2 == randomIndex1){
-//      randomIndex2 = random.nextInt(NUM_INDIVIDUOS - 1);
-//    }
-//
-//    int randomIndex3 = random.nextInt(NUM_INDIVIDUOS - 1);
-//    while(randomIndex3 == i || randomIndex3 == randomIndex1 || randomIndex3 == randomIndex2){
-//      randomIndex3 = random.nextInt(NUM_INDIVIDUOS - 1);
-//    }
-//
-//    Individuo u = new Individuo(QTD_GENES,QTD_AVALIACAO);
-//    Individuo ind1 = popInd.get(randomIndex1);
-//    Individuo ind2 = popInd.get(randomIndex2);
-//    Individuo ind3 = popInd.get(randomIndex3);
-//
-//    double[] val = new double[ind1.getGenes().length];
-//
-//    for (int j = 0; j < val.length; j++) {
-//      val[j] = ind3.getGenes()[j] + (F * (ind1.getGenes()[j] - ind2.getGenes()[j]));
-//    }
-//    u.setGenes(val);
-//    u.avaliar(FUNCTION);
-//    return u;
-//  }
 
   public void avaliaIndividuos(List<Individuo> individuos){
     for (Individuo individuo :
@@ -163,6 +100,34 @@ public class Main {
     }
     return popInicial;
   }
+
+  public static void makeOffspring(List<Individuo> intermedPop, List<Individuo> individuos) {
+    Random random = new Random();
+
+    List<Individuo> popAux = new ArrayList<>(individuos.size());
+    popAux.addAll(individuos);
+
+      while (popAux.size() > 1) {
+        int idxR1 = random.nextInt(popAux.size());
+        Individuo p1 = popAux.remove(idxR1);
+        int idxR2 = random.nextInt(popAux.size());
+        Individuo p2 = popAux.remove(idxR2);
+
+
+          List<Individuo> filhos = p1.recombinar(p2);
+        Individuo f1 = filhos.get(0);
+          if (random.nextDouble() > 0.9) {
+            f1.mutar();
+          }
+        Individuo f2 = filhos.get(0);
+          if (random.nextDouble() > 0.9) {
+            f2.mutar();
+          }
+
+          intermedPop.addAll(filhos);
+        }
+      }
+
 
   public static void generatePonts(List<Individuo> individuals, int numGen) {
     try {
