@@ -24,35 +24,42 @@ public class Individuo implements  Comparable<Individuo> {
         this.blxAlpha = new BLXAlpha(0.1);
     }
 
-    public Individuo(double[] values, int qntAvaliation) {
-        this( values, qntAvaliation, new BLXAlpha(0.1), new None());
+    public Individuo(double[] genes){
+        this.genes =genes;
     }
-    public Individuo(double[] values, double[] qntAvaliation) {
-        this( values, qntAvaliation, new BLXAlpha(0.1), new None());
+    public Individuo(double[] genes, int qntAvaliation) {
+        this( genes, qntAvaliation, new BLXAlpha(0.1), new None());
     }
-    public Individuo(double[]  values, int qntAvaliation, BLXAlpha blxAlpha, Mutation mutation){
-        this.genes = values;
+    public Individuo(double[] genes, double[] avaliacao) {
+        this( genes, avaliacao, new BLXAlpha(0.1), new None());
+    }
+    public Individuo(double[]  genes, int qntAvaliation, BLXAlpha blxAlpha, Mutation mutation){
+        this.genes = genes;
         this.avaliacao = new double[qntAvaliation];
         this.blxAlpha = blxAlpha;
         this.mutation = mutation;
     }
 
-    public Individuo(double[]  values, double[] qntAvaliation, BLXAlpha blxAlpha, Mutation mutation){
-        this.genes = values;
-        this.avaliacao = qntAvaliation;
+    public Individuo(double[]  genes, double[] avaliacao, BLXAlpha blxAlpha, Mutation mutation){
+        this.genes = genes;
+        this.avaliacao = avaliacao;
         this.blxAlpha = blxAlpha;
         this.mutation = mutation;
     }
-    public List<Individuo> recombinar(Individuo p2){
+    public List<Individuo> recombinar(Individuo p2,int FUNCTION){
         List<Individuo> filhos = new ArrayList<>(2);
 
         double[][] filhosMat = blxAlpha.getOffSpring(this.genes, p2.genes, new double[]{-10, -10}, new double[]{10, 10});
-        Individuo f1 = new Individuo(this.genes, filhosMat[0]);
-        Individuo f2 = new Individuo(p2.genes, filhosMat[1]); // TODO Alterado o this para p2
+        Individuo f1 = new Individuo(filhosMat[0],FUNCTION);
+        Individuo f2 = new Individuo(filhosMat[1],FUNCTION); // TODO Alterado o this para p2
 
         if (f1.genes.length == 0 || f2.genes.length == 0){
             int i = 0;
         }
+
+//        f1.avaliar(FUNCTION);
+//        f2.avaliar(FUNCTION);
+
         filhos.add(f1);
         filhos.add(f2);
 

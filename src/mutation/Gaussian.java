@@ -12,13 +12,13 @@ public class Gaussian implements Mutation{
         this.mutationDistributionIndex = mutationDistributionIndex;
     }
 
-    public double[] getMutation(double[] x, double[] lowerBound, double[] upperBound){
+    public double[] getMutation(double[] genes, double[] lowerBound, double[] upperBound){
         Random random = new Random();
         double mutate;
         double r;
-        boolean mutanted = false;
+        boolean mutated = false;
 
-        double[] cloneGenesX = x;
+        double[] cloneGenesX = genes;
 
         for(int i = 0; i < cloneGenesX.length; i++){
             mutate = random.nextDouble();
@@ -31,11 +31,11 @@ public class Gaussian implements Mutation{
 
                 r = random.nextGaussian();
                 cloneGenesX[i] = cloneGenesX[i] + r;
-                mutanted = true;
+                mutated = true;
             }
         }
 
-        if(!mutanted){
+        if(!mutated){
             int positionRandom = random.nextInt(0, cloneGenesX.length);
             r = random.nextGaussian();
 

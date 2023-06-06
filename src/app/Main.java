@@ -52,7 +52,7 @@ public class Main {
       List<Individuo> newPop = new ArrayList<>(NUM_INDIVIDUOS);
       List<Individuo> intermedPop = new ArrayList<>(individuos);
 
-      makeOffspring(intermedPop, individuos);
+      makeOffspring(intermedPop, individuos,FUNCTION);
       List<List<Individuo>> borders = FNDS.execute(intermedPop);
 
       for (List<Individuo> border : borders) {
@@ -101,7 +101,7 @@ public class Main {
     return popInicial;
   }
 
-  public static void makeOffspring(List<Individuo> intermedPop, List<Individuo> individuos) {
+  public static void makeOffspring(List<Individuo> intermedPop, List<Individuo> individuos,int FUNCTION) {
     Random random = new Random();
 
     List<Individuo> popAux = new ArrayList<>(individuos.size());
@@ -114,17 +114,21 @@ public class Main {
         Individuo p2 = popAux.remove(idxR2);
 
 
-          List<Individuo> filhos = p1.recombinar(p2);
+          List<Individuo> filhos = p1.recombinar(p2,FUNCTION);
         Individuo f1 = filhos.get(0);
           if (random.nextDouble() > 0.9) {
             f1.mutar();
           }
-        Individuo f2 = filhos.get(0);
+        Individuo f2 = filhos.get(1);
           if (random.nextDouble() > 0.9) {
             f2.mutar();
           }
 
-          intermedPop.addAll(filhos);
+
+          f1.avaliar(FUNCTION);
+          f2.avaliar(FUNCTION);
+          intermedPop.add(f1);
+          intermedPop.add(f2);
         }
       }
 
